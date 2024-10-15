@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Taxes;
 using WebApi.WordProcessing;
 
 namespace WebApi.Controllers;
@@ -31,6 +32,14 @@ public class ApiController : ControllerBase
     {
         return ProcessWords(sentence, new SortWordProcessor());
     }
+
+    [HttpGet("calculate-after-tax-income")]
+    public SalaryDetails CalculateAfterTaxIncome(decimal income, [FromServices] TaxCalculator taxCalculator)
+    {
+        return taxCalculator.CalculateTaxes(income);
+    }
+
+
 
     private bool IsLetterOrApostrophe(char c)
     {
