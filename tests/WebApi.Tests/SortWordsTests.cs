@@ -1,5 +1,6 @@
 ﻿using WebApi.Controllers;
-using WebApi.Taxes;
+using WebApi.TaxProcessing;
+using WebApi.TaxProcessing.Calculators;
 using WebApi.WordProcessing;
 
 namespace WebApi.Tests;
@@ -10,7 +11,10 @@ public class SortWordsTests
     
     public SortWordsTests()
     {
-        _controller = new ApiController(new TextProcessingService(), new TaxCalculator(new TaxBracketsLoader()));
+        var textProcessingService = new TextProcessingService();
+        var taxCalculator = new TaxCalculator(new TaxBracketsLoader(), new MedicareTaxCalculator());
+
+        _controller = new ApiController(textProcessingService, taxCalculator);
     }
 
     [Fact]
