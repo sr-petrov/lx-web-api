@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Taxes;
+using WebApi.TaxProcessing;
+using WebApi.TaxProcessing.Calculators;
 using WebApi.WordProcessing;
 
 namespace WebApi.Controllers;
@@ -35,13 +36,13 @@ public class ApiController : ControllerBase
     [HttpGet("calculate-after-tax-income")]
     public SalaryDetails CalculateAfterTaxIncome(decimal income)
     {
-        return _taxCalculator.CalculateTaxes(income);
+        return _taxCalculator.CalculateByBaseSalary(income);
     }
 
     // Calculates and returns the pre-tax income based on the given post-tax salary.
     [HttpGet("calculate-pre-tax-income-from-take-home")]
     public SalaryDetails CalculatePreTaxIncomeFromTakeHome(decimal postTaxSalary)
     {
-        return _taxCalculator.CalculatePreTaxIncome(postTaxSalary);
+        return _taxCalculator.CalculateByPostTaxSalary(postTaxSalary);
     }
 }

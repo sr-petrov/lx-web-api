@@ -1,14 +1,23 @@
-﻿using WebApi.Taxes;
+﻿using WebApi.TaxProcessing;
+using WebApi.TaxProcessing.Calculators;
 
 namespace WebApi.Tests;
 
 public class CalculateAfterTaxIncomeTests
 {
+    private readonly TaxCalculator _taxCalculator;
+    public CalculateAfterTaxIncomeTests()
+    {
+        var taxBracketsLoader = new TaxBracketsLoader();
+        var medicareTaxCalculator = new MedicareTaxCalculator();
+
+        _taxCalculator = new TaxCalculator(taxBracketsLoader, medicareTaxCalculator);
+    }
+
     [Fact]
     public void Calculate85000Test()
     {
-        var taxCalculator = new TaxCalculator(new TaxBracketsLoader());
-        var result = taxCalculator.CalculateTaxes(85000);
+        var result = _taxCalculator.CalculateByBaseSalary(85000);
 
         Assert.Equal(85000, result.BaseSalary);
         Assert.Equal(8075, result.Superannuation);
@@ -21,8 +30,7 @@ public class CalculateAfterTaxIncomeTests
     [Fact]
     public void Calculate15200Test()
     {
-        var taxCalculator = new TaxCalculator(new TaxBracketsLoader());
-        var result = taxCalculator.CalculateTaxes(15200);
+        var result = _taxCalculator.CalculateByBaseSalary(15200);
 
         Assert.Equal(15200, result.BaseSalary);
         Assert.Equal(1444, result.Superannuation);
@@ -35,8 +43,7 @@ public class CalculateAfterTaxIncomeTests
     [Fact]
     public void Calculate194003Test()
     {
-        var taxCalculator = new TaxCalculator(new TaxBracketsLoader());
-        var result = taxCalculator.CalculateTaxes(194003);
+        var result = _taxCalculator.CalculateByBaseSalary(194003);
 
         Assert.Equal(194003, result.BaseSalary);
         Assert.Equal(18430.29m, result.Superannuation);
@@ -49,8 +56,7 @@ public class CalculateAfterTaxIncomeTests
     [Fact]
     public void Calculate87000_50Test()
     {
-        var taxCalculator = new TaxCalculator(new TaxBracketsLoader());
-        var result = taxCalculator.CalculateTaxes(87000.50m);
+        var result = _taxCalculator.CalculateByBaseSalary(87000.50m);
 
         Assert.Equal(87000.50m, result.BaseSalary);
         Assert.Equal(8265.05m, result.Superannuation);

@@ -1,4 +1,5 @@
-using WebApi.Taxes;
+using WebApi.TaxProcessing;
+using WebApi.TaxProcessing.Calculators;
 using WebApi.WordProcessing;
 
 var builder = WebApplication.CreateBuilder(args);
