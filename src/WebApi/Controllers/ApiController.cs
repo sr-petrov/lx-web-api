@@ -39,6 +39,11 @@ public class ApiController : ControllerBase
         return taxCalculator.CalculateTaxes(income);
     }
 
+    [HttpGet("calculate-pre-tax-income-from-take-home")]
+    public SalaryDetails CalculatePreTaxIncomeFromTakeHome(decimal postTaxSalary, [FromServices] TaxCalculator taxCalculator)
+    {
+        return taxCalculator.CalculatePreTaxIncome(postTaxSalary);
+    }
 
 
     private bool IsLetterOrApostrophe(char c)
