@@ -34,9 +34,9 @@ public class ApiController : ControllerBase
 
     // Calculates and returns the details of after-tax income based on the provided income.
     [HttpGet("calculate-after-tax-income")]
-    public SalaryDetails CalculateAfterTaxIncome(decimal income)
+    public SalaryDetails CalculateAfterTaxIncome(decimal annualBaseSalary)
     {
-        return _taxCalculator.CalculateByBaseSalary(income);
+        return _taxCalculator.CalculateByBaseSalary(annualBaseSalary);
     }
 
     // Calculates and returns the pre-tax income based on the given post-tax salary.
