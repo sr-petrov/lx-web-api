@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<ITextProcessingService, TextProcessingService>();
 builder.Services.AddScoped<TaxBracketsLoader>();
-builder.Services.AddScoped<TaxCalculator>();
+builder.Services.AddScoped<MedicareTaxCalculator>();
+builder.Services.AddScoped<TaxCalculator>(); 
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -60,6 +60,6 @@ public class TextProcessingService: ITextProcessingService
     private bool IsLetterOrApostrophe(char c)
     {
         // Check if the character is a letter or an apostrophe
-        return char.IsLetter(c) || c == '\'';
+        return char.IsLetter(c) || char.IsDigit(c) || c == '\'';
     }
 }

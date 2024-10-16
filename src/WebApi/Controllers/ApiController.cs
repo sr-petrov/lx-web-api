@@ -6,7 +6,7 @@ using WebApi.WordProcessing;
 namespace WebApi.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api")]
 public class ApiController : ControllerBase
 {
     private readonly ITextProcessingService _textProcessingService;
