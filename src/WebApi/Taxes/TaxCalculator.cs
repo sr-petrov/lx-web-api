@@ -40,27 +40,69 @@ public class TaxCalculator
         };
     }
 
+    public SalaryDetails CalculatePreTaxIncome(decimal postTaxSalary)
+    {
+        // Use the loaders to get tax brackets
+        var taxBrackets = _taxBracketsLoader.LoadTaxBrackets();
+
+        var baseSalary = CalculatePreTaxIncome(postTaxSalary, taxBrackets);
+
+        return CalculateTaxes(baseSalary);
+    }
+
     private decimal CalculateIncomeTax(decimal baseSalary, IEnumerable<TaxBracket> taxBrackets)
     {
         decimal incomeTax = 0;
         decimal previousTreshold = 0;
-        baseSalary = Math.Floor(baseSalary);
+        baseSalary = Math.Floor(baseSalary); // Round down salary
 
+        // Iterate through tax brackets
         foreach (var bracket in taxBrackets)
         {
             if (baseSalary > bracket.Threshold)
             {
+                // Calculate tax for the current bracket
                 incomeTax += AtoRound((Math.Min(baseSalary, bracket.Threshold) - previousTreshold - 1) * bracket.Rate);
                 previousTreshold = bracket.Threshold;
             }
             else
             {
+                // Calculate remaining tax and exit loop
                 incomeTax += AtoRound((baseSalary - previousTreshold) * bracket.Rate);
                 break;
             }
         }
 
-        return AtoRound(incomeTax);
+        return AtoRound(incomeTax); // Return rounded tax
+    }
+
+    public decimal CalculatePreTaxIncome(decimal postTaxSalary, IEnumerable<TaxBracket> taxBrackets)
+    {
+        // There may be a more elegant way to calculate pre-tax salary from a post-tax value, 
+        // but given the time constraints, I used a quick method that leverages the existing 
+        // and tested CalculateIncomeTax() function. It iteratively guesses the base salary 
+        // and validates it using the tax calculation.
+
+        decimal low = postTaxSalary;
+        decimal high = postTaxSalary * 2;  // Upper estimate for base salary
+        decimal tolerance = 1; // Accuracy within 1 dollar
+
+        while (high - low > tolerance)
+        {
+            decimal guessSalary = (low + high) / 2;
+            decimal calculatedAfterTaxIncome = CalculateTaxes(guessSalary).AfterTaxIncome;
+
+            if (calculatedAfterTaxIncome > postTaxSalary)
+            {
+                high = guessSalary; // Lower base salary guess
+            }
+            else
+            {
+                low = guessSalary; // Increase base salary guess
+            }
+        }
+
+        return Math.Round((low + high) / 2, 0); // Return estimated pre-tax salary
     }
 
     public static decimal AtoRound(decimal value)
