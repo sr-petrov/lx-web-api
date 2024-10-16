@@ -1,8 +1,10 @@
 using WebApi.Taxes;
+using WebApi.WordProcessing;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<ITextProcessingService, TextProcessingService>();
 builder.Services.AddScoped<TaxBracketsLoader>();
 builder.Services.AddScoped<TaxCalculator>();
 

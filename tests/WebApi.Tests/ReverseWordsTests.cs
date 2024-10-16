@@ -1,19 +1,22 @@
-﻿using Microsoft.Extensions.Logging;
-using Moq;
-using WebApi.Controllers;
+﻿using WebApi.Controllers;
+using WebApi.Taxes;
+using WebApi.WordProcessing;
 
 namespace WebApi.Tests;
 
 public class ReverseWordsTests
 {
+    private readonly ApiController _controller;
+
+    public ReverseWordsTests()
+    {
+        _controller = new ApiController(new TextProcessingService(), new TaxCalculator(new TaxBracketsLoader()));
+    }
+
     [Fact]
     public void HelloThereTest()
     {
-        var mockLogger = new Mock<ILogger<ApiController>>();
-
-        var controller = new ApiController(mockLogger.Object);
-
-        var result = controller.ReverseWords("Hello there!");
+        var result = _controller.ReverseWords("Hello there!");
 
         Assert.Equal("olleH ereht!", result);
     }
@@ -21,11 +24,7 @@ public class ReverseWordsTests
     [Fact]
     public void LxTest()
     {
-        var mockLogger = new Mock<ILogger<ApiController>>();
-
-        var controller = new ApiController(mockLogger.Object);
-
-        var result = controller.ReverseWords("LX's head office is located in Sydney, Australia.");
+        var result = _controller.ReverseWords("LX's head office is located in Sydney, Australia.");
 
         Assert.Equal("s'XL daeh eciffo si detacol ni yendyS, ailartsuA.", result);
     }
@@ -33,11 +32,7 @@ public class ReverseWordsTests
     [Fact]
     public void HelloWorldTest()
     {
-        var mockLogger = new Mock<ILogger<ApiController>>();
-
-        var controller = new ApiController(mockLogger.Object);
-
-        var result = controller.ReverseWords("\"Hello World!\"");
+        var result = _controller.ReverseWords("\"Hello World!\"");
 
         Assert.Equal("\"olleH dlroW!\"", result);
     }
@@ -45,11 +40,7 @@ public class ReverseWordsTests
     [Fact]
     public void ComplexTest()
     {
-        var mockLogger = new Mock<ILogger<ApiController>>();
-
-        var controller = new ApiController(mockLogger.Object);
-
-        var result = controller.ReverseWords("\"\"Very,complex , one test,.With multiple\", unexpected!!\",.chare-ters...");
+        var result = _controller.ReverseWords("\"\"Very,complex , one test,.With multiple\", unexpected!!\",.chare-ters...");
 
         Assert.Equal("\"\"yreV,xelpmoc , eno tset,.htiW elpitlum\", detcepxenu!!\",.erahc-sret...", result);
     }
